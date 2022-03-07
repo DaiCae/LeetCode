@@ -1,36 +1,49 @@
-import java.util.Arrays;
+// import java.util.Arrays;
 // import java.util.HashMap;
 
 public class test {
+    public static double getK(int[] nums1, int[] nums2, int k){
+        int o1=0, o2=0;
+        while(k!=1){
+            int tmp = k/2;
+            int n1 = (o1 + tmp -1 < nums1.length) ? nums1[o1 + tmp -1] : Integer.MAX_VALUE;
+            int n2 = (o2 + tmp -1 < nums2.length) ? nums2[o2 + tmp -1] : Integer.MAX_VALUE;
+            if(n1<n2) o1 +=tmp; else o2 +=tmp;
+            k -= k/2;
+        }
+        int r1 = (o1 < nums1.length) ? nums1[o1] : Integer.MAX_VALUE;
+        int r2 = (o2 < nums2.length) ? nums2[o2] : Integer.MAX_VALUE;
+        return (double)Math.min(r1,r2);
+    }
+
     public static double findMedianSortedArrays(int[] nums1, int[] nums2) {
         int m = nums1.length;
         int n = nums2.length;
-        int o1=0, o2=0;
-        int k = (m + n)/2;
-        
-        while(k!=1){
-            int tmp = k/2;
-            if(nums1[o1 + tmp -1]<=nums2[o2 + tmp -1]){
-                o1 +=tmp;
-            }else{
-                o2 +=tmp;
-            }
-            k = k-k/2;
+        int k = (m + n + 1)/2;
+        if(m == 0) {
+            if(n==1) return (double)nums2[0];
+            return (double)(nums2[(n+1)/2-1] + nums2[(n+2)/2-1])/2;
+        }else if(n == 0) {
+            if(m==1) return (double)nums1[0];
+            return (double)(nums1[(m+1)/2-1] + nums1[(m+2)/2-1])/2;
         }
-        // o1 +=1;
-        // o2 +=1;
-        o1 +=0;
-        o2 +=0;
+        double result = getK(nums1,nums2,k);
         if((m+n)%2==0){
-            return (double)(nums1[o1] + nums2[o2])/2;
-        }else{
-            return (double)Math.min(nums1[o1],nums2[o2]);
+            k = (m + n + 2)/2;
+            result = (result + getK(nums1,nums2,k))/2;
         }
+        return result;
     }
 
     public static void main(String[] args){
-        int[] nums1 = {1 ,3, 4, 9};
-        int[] nums2 = {1, 2, 3, 3, 5, 6, 7, 8};
+        // int[] nums1 = {};
+        // int[] nums2 = {2, 3, 4, 5};
+        
+        // int[] nums1 = {1,2};
+        // int[] nums2 = {3,4};
+
+        int[] nums1 = {1,3};
+        int[] nums2 = {2};
 
         double a =findMedianSortedArrays(nums1, nums2);
         System.out.println(a);
