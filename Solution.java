@@ -1,5 +1,7 @@
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
 class Solution {
 
@@ -20,29 +22,38 @@ class Solution {
         }
     }
 
-    ListNode mergeKLists(ListNode[] lists) {
-        if (lists.length == 0) return null;
-        ListNode p = new ListNode();
-        ListNode res = p;
-        PriorityQueue<ListNode> pq = new PriorityQueue<>(lists.length,
-                (a, b) -> {
-                    if (a.val > b.val) {
-                        return 1;
-                    } else if (a.val < b.val) {
-                        return -1;
-                    } else {
-                        return 0;
-                    }
-                });
-        for (ListNode head : lists) {
-            if (head != null) pq.add(head);
+    public class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+
+        TreeNode() {
         }
-        while (!pq.isEmpty()) {
-            p.next = pq.poll();
-            p = p.next;
-            if (p.next != null) pq.add(p.next);
+
+        TreeNode(int val) {
+            this.val = val;
         }
-        return res.next;
+
+        TreeNode(int val, TreeNode left, TreeNode right) {
+            this.val = val;
+            this.left = left;
+            this.right = right;
+        }
     }
 
+    public int findBottomLeftValue(TreeNode root) {
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            int sz = queue.size();
+            for (int i = 0; i < sz; i++) {
+                root = queue.poll();
+                if (root != null) {
+                    queue.offer(root.right);
+                    queue.offer(root.left);
+                }
+            }
+        }
+        return root.val;
+    }
 }
