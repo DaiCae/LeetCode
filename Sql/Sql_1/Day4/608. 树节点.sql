@@ -1,4 +1,4 @@
--- 解法一 使用UNIION
+-- 解法一 使用UNION
 SELECT id,
        'Root' AS Type
 FROM tree
